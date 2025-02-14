@@ -9,8 +9,11 @@ import SwiftUI
 
 struct ColorPickerView: View {
     
+    @Environment(BoardViewModel.self) private var boardViewModel
+    
     let presetColors: [Color] = [
-        .red, .orange, .yellow, 
+        .gray.opacity(0.2),
+        .red, .orange, .yellow,
         .green, .blue, .purple, .pink,
         .indigo
     ]
@@ -20,9 +23,7 @@ struct ColorPickerView: View {
         GridItem(.adaptive(minimum: 35, maximum: 35), spacing: 12),
         GridItem(.adaptive(minimum: 35, maximum: 35), spacing: 12),
     ]
-    
-    @State private var selectedColor: Color? = nil
-    
+        
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Colors")
@@ -38,11 +39,11 @@ struct ColorPickerView: View {
                         .shadow(color: .black.opacity(0.1), radius: 2, y: 1)
                         .overlay {
                             Circle()
-                                .stroke(selectedColor == nil ? Color.clear : Color.blue, lineWidth: 2)
+                                .stroke(boardViewModel.selectedColor == color ? Color.blue : Color.clear, lineWidth: 2)
                                 .frame(width: 40, height: 40)
                         }
                         .onTapGesture {
-                            selectedColor = color
+                            boardViewModel.selectedColor = color
                         }
                     
                 }
@@ -56,4 +57,5 @@ struct ColorPickerView: View {
 #Preview {
     ColorPickerView()
         .padding()
+        .environment(BoardViewModel())
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum BoardContent: Hashable {
     
@@ -23,6 +24,12 @@ struct BoardItem: Identifiable, Hashable {
     
     let id: UUID = UUID()
     var content: BoardContent
+    var color: Color
+    
+    init(content: BoardContent, Color: Color? = nil) {
+        self.content = content
+        self.color = .gray.opacity(0.2)
+    }
     
     static let example: [Self] = [
         BoardItem(content: .text("Hello, how are you doing")),
@@ -35,6 +42,8 @@ struct BoardItem: Identifiable, Hashable {
 @Observable class BoardViewModel {
     
     var boardItems: [BoardItem] = []
+    
+    var selectedColor: Color? = nil
     
     init() {
         setup()
@@ -49,5 +58,13 @@ struct BoardItem: Identifiable, Hashable {
     func createTextBoardItem() {
         let newBoardItem: BoardItem = .init(content: .text("Add your text here..."))
         self.boardItems.append(newBoardItem)
+    }
+    
+    func addColor(for item: BoardItem) {
+        if let selectedColor {
+            if let index = boardItems.firstIndex(where: { $0.id == item.id }) {
+                boardItems[index].color = selectedColor
+            }
+        }
     }
 }

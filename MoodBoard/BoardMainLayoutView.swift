@@ -30,6 +30,7 @@ struct BoardMainLayoutView: View {
             .toolbar {
                 toolbarButtons
             }
+            .environment(boardViewModel)
         }
     }
     
@@ -48,8 +49,16 @@ struct BoardMainLayoutView: View {
         .frame(width: 280, height: 280)
         .background(
             RoundedRectangle(cornerRadius: 15)
-                .fill(Color.gray.opacity(0.2))
+                .fill(item.color.wrappedValue)
         )
+        .onTapGesture {
+            onTap(item)
+        }
+        
+    }
+    
+    func onTap(_ item: Binding<BoardItem>) {
+        boardViewModel.addColor(for: item.wrappedValue)
     }
     
     func textView(text: Binding<String>) -> some View {
