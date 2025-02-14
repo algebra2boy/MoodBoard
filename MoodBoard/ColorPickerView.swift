@@ -9,34 +9,51 @@ import SwiftUI
 
 struct ColorPickerView: View {
     
-    let presetColors: [Color] = [.red, .green, .yellow, .blue, .purple, .orange, .pink]
+    let presetColors: [Color] = [
+        .red, .orange, .yellow, 
+        .green, .blue, .purple, .pink,
+        .indigo
+    ]
     
-    let columns: [GridItem] = .init(repeating: .init(.flexible(minimum: 20, maximum:40)), count: 2)
+    let columns: [GridItem] = [
+        GridItem(.adaptive(minimum: 35, maximum: 35), spacing: 12),
+        GridItem(.adaptive(minimum: 35, maximum: 35), spacing: 12),
+        GridItem(.adaptive(minimum: 35, maximum: 35), spacing: 12),
+    ]
+    
+    @State private var selectedColor: Color? = nil
     
     var body: some View {
-        
-        VStack {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Colors")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .padding(.horizontal)
             
-            LazyVGrid(columns: columns, spacing: 10) {
-                
+            LazyVGrid(columns: columns, spacing: 12) {
                 ForEach(presetColors, id: \.self) { color in
-                    RoundedRectangle(cornerRadius: 20)
+                    Circle()
                         .fill(color)
-                        .frame(width: 50, height: 50)
+                        .frame(width: 35, height: 35)
+                        .shadow(color: .black.opacity(0.1), radius: 2, y: 1)
+                        .overlay {
+                            Circle()
+                                .stroke(selectedColor == nil ? Color.clear : Color.blue, lineWidth: 2)
+                                .frame(width: 40, height: 40)
+                        }
+                        .onTapGesture {
+                            selectedColor = color
+                        }
+                    
                 }
             }
+            .padding(.horizontal)
         }
+        .padding(.vertical)
     }
 }
 
 #Preview {
-    @Previewable @State var show: Bool = true
-    Button {
-        show.toggle()
-    } label:  {
-        Text("Tap on")
-    }
-    .popover(isPresented: $show) {
-        ColorPickerView()
-    }
+    ColorPickerView()
+        .padding()
 }
