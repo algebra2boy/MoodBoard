@@ -67,4 +67,20 @@ struct BoardItem: Identifiable, Hashable {
             }
         }
     }
+    
+    func rearrange(from: IndexSet, to: Int) {
+        self.boardItems.move(fromOffsets: from, toOffset: to)
+    }
+}
+
+extension BoardViewModel {
+    func binding(for boardItem: BoardItem) -> Binding<BoardItem> {
+        guard let index = boardItems.firstIndex(where: { $0.id == boardItem.id }) else {
+            fatalError("Board item not found")
+        }
+        return Binding(
+            get: { self.boardItems[index] },
+            set: { self.boardItems[index] = $0 }
+        )
+    }
 }

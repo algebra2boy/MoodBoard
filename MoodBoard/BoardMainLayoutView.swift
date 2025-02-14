@@ -15,6 +15,8 @@ struct BoardMainLayoutView: View {
     
     let columns: [GridItem] = .init(repeating: .init(.adaptive(minimum: 280, maximum: 350), spacing: 20) , count: 3)
     
+    @State private var currentBoard: BoardItem?
+    
     var body: some View {
         
         NavigationStack {
@@ -23,8 +25,12 @@ struct BoardMainLayoutView: View {
                 
                 LazyVGrid(columns: columns, spacing: 20) {
                     
-                    ForEach($boardViewModel.boardItems) { item in
+                    ReorderableForEach(boardViewModel.boardItems, selection: $currentBoard) { item in
                         boardItemView(for: item)
+                    } preview: { item in
+                        boardItemView(for: item)
+                    } moveAction: { from, to in
+                        boardViewModel.rearrange(from: from, to: to)
                     }
                     
                 }
@@ -38,11 +44,13 @@ struct BoardMainLayoutView: View {
     }
     
     @ViewBuilder
-    func boardItemView(for item: Binding<BoardItem>) -> some View {
+    func boardItemView(for item: BoardItem) -> some View {
+        let bindingItem = boardViewModel.binding(for: item)
+        
         Group {
-            switch item.wrappedValue.content {
-            case .text:
-                textView(text: item.textBinding)
+            switch item.content {
+            case .text(let string):
+                textView(text: bindingItem.textBinding)
             case .image(let string):
                 Text("sup image")
             case .empty:
@@ -52,10 +60,10 @@ struct BoardMainLayoutView: View {
         .frame(width: 280, height: 280)
         .background(
             RoundedRectangle(cornerRadius: 15)
-                .fill(item.color.wrappedValue)
+                .fill(item.color)
         )
         .onTapGesture {
-            onTap(item)
+            onTap(bindingItem)
         }
         
     }
