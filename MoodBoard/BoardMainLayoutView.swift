@@ -36,6 +36,7 @@ struct BoardMainLayoutView: View {
                 }
                 .padding()
             }
+            .navigationTitle("Board View")
             .padding(.vertical, 30)
             .toolbar {
                 toolbarButtons
@@ -49,10 +50,10 @@ struct BoardMainLayoutView: View {
         
         Group {
             switch item.content {
-            case .text(let string):
+            case .text(_):
                 textView(text: bindingItem.textBinding)
             case .image(let string):
-                Text("sup image")
+                imageView(imageName: string)
             case .empty:
                 Text("")
             }
@@ -65,11 +66,25 @@ struct BoardMainLayoutView: View {
         .onTapGesture {
             onTap(bindingItem)
         }
+        .contextMenu {
+            Button(role: .destructive) {
+//                boardViewModel.delete(item)
+            } label: {
+                Label("Delete", systemImage: "trash")
+            }
+            
+        }
         
     }
     
+    /// only adds color to text, empty grid
     func onTap(_ item: Binding<BoardItem>) {
-        boardViewModel.addColor(for: item.wrappedValue)
+        switch item.wrappedValue.content {
+        case .text, .empty:
+            boardViewModel.addColor(for: item.wrappedValue)
+        default:
+            return
+        }
     }
     
     func textView(text: Binding<String>) -> some View {
@@ -82,8 +97,22 @@ struct BoardMainLayoutView: View {
         }
     }
     
+    func imageView(imageName: String) -> some View {
+        Image(imageName)
+            .resizable()
+            .scaledToFit()
+    }
+    
     var toolbarButtons: some ToolbarContent {
         ToolbarItemGroup {
+            
+            Button {
+                boardViewModel.createEmptyBoardItem()
+            } label: {
+                Image(systemName: "square")
+                    .font(.system(size: 25))
+            }
+            
             Button {
                 boardViewModel.createTextBoardItem()
             } label: {
@@ -92,7 +121,7 @@ struct BoardMainLayoutView: View {
             }
             
             Button {
-                
+                boardViewModel.createImageBoardItem()
             } label: {
                 Image(systemName: "photo")
                     .font(.system(size: 25))

@@ -39,7 +39,7 @@ struct ColorPickerView: View {
                         .shadow(color: .black.opacity(0.1), radius: 2, y: 1)
                         .overlay {
                             Circle()
-                                .stroke(boardViewModel.selectedColor == color ? Color.blue : Color.clear, lineWidth: 2)
+                                .stroke(boardViewModel.selectedColor == color ? Color.blue : Color.clear, lineWidth: 3)
                                 .frame(width: 40, height: 40)
                         }
                         .onTapGesture {
