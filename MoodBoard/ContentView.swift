@@ -8,14 +8,28 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    // a way to persist small and simple data in the disk
+    @AppStorage("sidebarCustomizations") var tabViewCustomization: TabViewCustomization
+    
+    @State private var selectedTab: AppTabs = .board
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        
+        TabView(selection: $selectedTab) {
+
+            Tab(AppTabs.board.name, systemImage: AppTabs.board.systemImage, value: .board) {
+                BoardMainLayoutView()
+            }
+            
+            Tab(AppTabs.settings.name, systemImage: AppTabs.settings.systemImage, value: .settings) {
+                Text("settings")
+            }
+            .customizationID(AppTabs.settings.customizationID)
         }
-        .padding()
+        .tabViewStyle(.sidebarAdaptable)
+        .tabViewCustomization($tabViewCustomization)
+        
     }
 }
 
