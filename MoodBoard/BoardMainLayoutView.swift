@@ -19,18 +19,21 @@ struct BoardMainLayoutView: View {
         
         NavigationStack {
             
-            LazyVGrid(columns: columns, spacing: 20) {
+            ScrollView {
                 
-                ForEach($boardViewModel.boardItems) { item in
-                    boardItemView(for: item)
+                LazyVGrid(columns: columns, spacing: 20) {
+                    
+                    ForEach($boardViewModel.boardItems) { item in
+                        boardItemView(for: item)
+                    }
+                    
                 }
-                
+                .padding()
             }
-            .padding()
+            .padding(.vertical, 30)
             .toolbar {
                 toolbarButtons
             }
-            .environment(boardViewModel)
         }
     }
     
@@ -95,8 +98,8 @@ struct BoardMainLayoutView: View {
             }
             .popover(isPresented: $presentColorPickerView) {
                 ColorPickerView()
+                    .environment(boardViewModel)
             }
-            
             
         }
     }
