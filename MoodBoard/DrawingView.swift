@@ -116,7 +116,6 @@ extension PKCanvasView {
         return renderer.image { _ in
             // Render the canvasView's layer into the image context.
             self.layer.render(in: UIGraphicsGetCurrentContext()!)
-            self.layer.render(in: UIGraphicsGetCurrentContext()!)
         }
     }
 }
