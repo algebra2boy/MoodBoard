@@ -67,6 +67,15 @@ struct BoardMainLayoutView: View {
             onTap(bindingItem)
         }
         .contextMenu {
+            
+            if item.canDraw {
+                NavigationLink {
+                    DrawingView()
+                } label: {
+                    Label("Draw", systemImage: "pencil.and.scribble")
+                }
+            }
+                                    
             Button(role: .destructive) {
                 if currentBoard == item { // deselect currentBoard if we delete
                     currentBoard = nil

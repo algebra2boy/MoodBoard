@@ -36,6 +36,15 @@ struct BoardItem: Identifiable, Hashable {
         BoardItem(content: .empty)
     ]
     
+    var canDraw: Bool {
+        switch self.content {
+        case .image, .empty:
+            return true
+        default:
+            return false
+        }
+    }
+    
 }
 
 @Observable class BoardViewModel {
