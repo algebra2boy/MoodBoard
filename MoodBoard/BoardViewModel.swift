@@ -16,8 +16,10 @@ enum BoardContent: Hashable {
     /// accept an image to display on screen
     case image(String) // For now, these images come from assets for demonstration purposes
     
+    /// accepts drawing canvas image to display on screen
     case drawing(UIImage)
     
+    /// accepts nothing to display a simple grid on screen
     case empty
     
 }

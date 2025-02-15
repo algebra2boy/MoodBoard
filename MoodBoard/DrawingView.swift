@@ -12,6 +12,7 @@ struct DrawingView: View {
     
     @Environment(BoardViewModel.self) private var boardViewModel
     
+    // allows us to control the canvas that controlled by finger or pencik
     @State private var canvasView = PKCanvasView()
     
     @State private var isToolPickerPresented: Bool = false
@@ -32,6 +33,7 @@ struct DrawingView: View {
                         isToolPickerPresented.toggle()
                     } label: {
                         Image(systemName: "pencil.and.scribble")
+                            .font(.system(size: 25))
                     }
                 }
                 
@@ -40,6 +42,7 @@ struct DrawingView: View {
                         eraseBoard()
                     } label: {
                         Image(systemName: "eraser")
+                            .font(.system(size: 25))
                     }
                 }
                 
@@ -48,6 +51,7 @@ struct DrawingView: View {
                         isalertShown.toggle()
                     } label: {
                         Image(systemName: "square.and.arrow.down")
+                            .font(.system(size: 25))
                     }
                 }
             }
@@ -68,6 +72,7 @@ struct DrawingView: View {
     }
 }
 
+/// Apple's PKCanvasView does not support SwiftUI natively, we have to make it as a UIView
 struct CanvasView: UIViewRepresentable {
     
     @Binding var canvasView: PKCanvasView
@@ -109,6 +114,7 @@ struct CanvasView: UIViewRepresentable {
 
 extension PKCanvasView {
     
+    // convert SwiftUIView to UIImage
     func snapshot() -> UIImage {
                 
         let renderer = UIGraphicsImageRenderer(size: bounds.size)

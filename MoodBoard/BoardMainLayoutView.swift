@@ -19,10 +19,12 @@ struct BoardMainLayoutView: View {
     
     var body: some View {
         
+        // A view that displays a root view and enables you to present additional views over the root view.
         NavigationStack {
             
             ScrollView {
                 
+                // LazyHGrid (show grid lazily horizontally), LazyVGrid (show grid lazily vertically)
                 LazyVGrid(columns: columns, spacing: 20) {
                     
                     ReorderableForEach(boardViewModel.boardItems, selection: $currentBoard) { item in
@@ -48,6 +50,7 @@ struct BoardMainLayoutView: View {
     func boardItemView(for item: BoardItem) -> some View {
         let bindingItem = boardViewModel.binding(for: item)
         
+        // a group allows us to group multiple instances of a content type
         Group {
             switch item.content {
             case .text:
@@ -68,7 +71,7 @@ struct BoardMainLayoutView: View {
         .onTapGesture {
             onTap(bindingItem)
         }
-        .contextMenu {
+        .contextMenu { // long press to open it
             
             Button(role: .destructive) {
                 if currentBoard == item { // deselect currentBoard if we delete
@@ -106,6 +109,7 @@ struct BoardMainLayoutView: View {
     
     @ViewBuilder
     func imageView(imageName: String) -> some View {
+        // GeometryRead allows us to have acecss to parent's dimension
         GeometryReader { geoReader in
             if let uiImage = loadImageFromBundle(named: imageName) {
                 Image(uiImage: uiImage)
@@ -136,6 +140,7 @@ struct BoardMainLayoutView: View {
     func loadImageFromBundle(named name: String) -> UIImage? {
         let fileExtensions = ["png", "jpg", "jpeg"]
         for fileExtension in fileExtensions {
+            // check if a file exists with a name and a fileExetnsion and if exists in the current papp
             if let path = Bundle.main.path(forResource: name, ofType: fileExtension) {
                 return UIImage(contentsOfFile: path)
             }
@@ -144,6 +149,7 @@ struct BoardMainLayoutView: View {
     }
     
     var toolbarButtons: some ToolbarContent {
+        // ToolbarItemGroup allows to group all these little buttons on the top of the app
         ToolbarItemGroup {
             
             Button {
