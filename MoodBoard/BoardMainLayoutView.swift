@@ -124,10 +124,13 @@ struct BoardMainLayoutView: View {
     }
     
     func drawingView(_ image: UIImage) -> some View {
-        Image(uiImage: image)
-            .resizable()
-            .scaledToFill()
-            .clipped()
+        GeometryReader { geoReader in
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFill()
+                .frame(width: geoReader.size.width, height: geoReader.size.height)
+                .clipped()
+        }
     }
     
     func loadImageFromBundle(named name: String) -> UIImage? {

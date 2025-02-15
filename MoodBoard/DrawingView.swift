@@ -37,6 +37,14 @@ struct DrawingView: View {
                 
                 ToolbarItem {
                     Button {
+                        eraseBoard()
+                    } label: {
+                        Image(systemName: "eraser")
+                    }
+                }
+                
+                ToolbarItem {
+                    Button {
                         isalertShown.toggle()
                     } label: {
                         Image(systemName: "square.and.arrow.down")
@@ -50,10 +58,12 @@ struct DrawingView: View {
         }
     }
     
+    func eraseBoard() {
+        canvasView.drawing = PKDrawing()
+    }
+    
     func create() {
-        let snapshot = CanvasView(canvasView: $canvasView, isToolPickerPresented: $isToolPickerPresented)
-            .frame(width: 1440, height: 1680)
-            .snapshot()
+        let snapshot = canvasView.snapshot()
         boardViewModel.createDrawingBoardItem(with: snapshot)
     }
 }
@@ -90,19 +100,16 @@ struct CanvasView: UIViewRepresentable {
     
 }
 
-extension View {
+extension PKCanvasView {
+    
     func snapshot() -> UIImage {
-        let controller = UIHostingController(rootView: self)
-        let view = controller.view
-
-        let targetSize = controller.view.intrinsicContentSize
-        view?.bounds = CGRect(origin: .zero, size: targetSize)
-        view?.backgroundColor = .clear
-
-        let renderer = UIGraphicsImageRenderer(size: targetSize)
-
+                
+        let renderer = UIGraphicsImageRenderer(size: bounds.size)
+        
         return renderer.image { _ in
-            view?.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
+            // Render the canvasView's layer into the image context.
+            self.layer.render(in: UIGraphicsGetCurrentContext()!)
+            self.layer.render(in: UIGraphicsGetCurrentContext()!)
         }
     }
 }
