@@ -18,9 +18,9 @@ struct DrawingView: View {
         NavigationStack {
             VStack {
                 CanvasView(canvasView: $canvasView, isToolPickerPresented: $isToolPickerPresented)
-                    .frame(width: 280, height: 280)
-                    .border(Color.black, width: 2)
+                    .border(Color.black.opacity(0.5), width: 2)
             }
+            .padding()
             .navigationTitle("Drawing View")
             .toolbar {
                 ToolbarItem {

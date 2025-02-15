@@ -19,8 +19,8 @@ struct ContentView: View {
                 BoardMainLayoutView()
             }
             
-            Tab(AppTabs.settings.name, systemImage: AppTabs.settings.systemImage, value: .settings) {
-                Text("settings")
+            Tab(AppTabs.drawing.name, systemImage: AppTabs.drawing.systemImage, value: .drawing) {
+                DrawingView()
             }
         }
         

@@ -9,7 +9,7 @@ import Foundation
 
 enum AppTabs: String, Equatable, Hashable, Identifiable {
     case board
-    case settings
+    case drawing
     
     var id: String { self.rawValue }
     
@@ -19,8 +19,8 @@ enum AppTabs: String, Equatable, Hashable, Identifiable {
         switch self {
         case .board:
             "square.grid.3x3.square"
-        case .settings:
-            "gear"
+        case .drawing:
+            "paintpalette"
         }
     }
     
