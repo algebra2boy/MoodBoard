@@ -23,8 +23,6 @@ struct ContentView: View {
             Tab(AppTabs.board.name, systemImage: AppTabs.board.systemImage, value: .drawing) {
                 BoardMainLayoutView()
             }
-            .customizationID(AppTabs.board.customizationID)
-
            
             Tab(AppTabs.drawing.name, systemImage: AppTabs.drawing.systemImage, value: .drawing) {
                 DrawingView()
