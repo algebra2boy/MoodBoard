@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BoardMainLayoutView: View {
     
-    @State private var boardViewModel: BoardViewModel = BoardViewModel()
+    @Environment(BoardViewModel.self) private var boardViewModel
     
     @State private var presentColorPickerView: Bool = false
     
@@ -50,10 +50,12 @@ struct BoardMainLayoutView: View {
         
         Group {
             switch item.content {
-            case .text(_):
+            case .text:
                 textView(text: bindingItem.textBinding)
             case .image(let string):
                 imageView(imageName: string)
+            case .drawing(let image):
+                drawingView(image)
             case .empty:
                 Text("")
             }
@@ -119,6 +121,13 @@ struct BoardMainLayoutView: View {
                     .clipped()
             }
         }
+    }
+    
+    func drawingView(_ image: UIImage) -> some View {
+        Image(uiImage: image)
+            .resizable()
+            .scaledToFill()
+            .clipped()
     }
     
     func loadImageFromBundle(named name: String) -> UIImage? {
@@ -193,4 +202,5 @@ extension Binding where Value == BoardItem {
 
 #Preview {
     BoardMainLayoutView()
+        .environment(BoardViewModel())
 }

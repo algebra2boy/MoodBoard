@@ -16,6 +16,8 @@ enum BoardContent: Hashable {
     /// accept an image to display on screen
     case image(String) // For now, these images come from assets for demonstration purposes
     
+    case drawing(UIImage)
+    
     case empty
     
 }
@@ -89,6 +91,11 @@ struct BoardItem: Identifiable, Hashable {
             print("Error loading images: \(error)")
         }
         
+    }
+    
+    func createDrawingBoardItem(with snapshot: UIImage) {
+        let newBoardItem: BoardItem = .init(content: .drawing(snapshot))
+        self.boardItems.append(newBoardItem)
     }
     
     func addColor(for item: BoardItem) {

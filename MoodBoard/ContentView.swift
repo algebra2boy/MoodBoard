@@ -11,6 +11,8 @@ struct ContentView: View {
     
     @State private var selectedTab: AppTabs = .board
     
+    @State private var boardViewModel: BoardViewModel = BoardViewModel()
+    
     var body: some View {
         
         TabView(selection: $selectedTab) {
@@ -23,6 +25,7 @@ struct ContentView: View {
                 DrawingView()
             }
         }
+        .environment(boardViewModel)
         
     }
 }
