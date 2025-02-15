@@ -3,12 +3,14 @@
 //  MoodBoard
 //
 //  Created by Yongye Tan on 2/14/25.
-//
+//  Reference: https://stackoverflow.com/questions/60647857/undomanagers-canundo-property-not-updating-in-swiftui
 
 import SwiftUI
 import PencilKit
 
 struct DrawingView: View {
+    
+    @Environment(\.undoManager) private var undoManager
     
     @Environment(BoardViewModel.self) private var boardViewModel
     
@@ -17,7 +19,13 @@ struct DrawingView: View {
     
     @State private var isToolPickerPresented: Bool = false
     
-    @State private var isalertShown: Bool = false
+    @State private var isAlertShown: Bool = false
+    
+    @State private var canUndo: Bool = false
+    
+    @State private var canRedo: Bool = false
+    
+    private let undoObserver = NotificationCenter.default.publisher(for: .NSUndoManagerDidCloseUndoGroup)
     
     var body: some View {
         NavigationStack {
@@ -48,16 +56,41 @@ struct DrawingView: View {
                 
                 ToolbarItem {
                     Button {
-                        isalertShown.toggle()
+                        isAlertShown.toggle()
                     } label: {
                         Image(systemName: "square.and.arrow.down")
                             .font(.system(size: 25))
                     }
                 }
+                
+                ToolbarItem {
+                    Button {
+                        undoManager?.undo()
+                    } label: {
+                        Image(systemName: "arrow.uturn.backward")
+                            .font(.system(size: 25))
+                    }
+                    .disabled(!canUndo)
+                }
+                
+                ToolbarItem {
+                    Button {
+                        undoManager?.redo()
+                    } label: {
+                        Image(systemName: "arrow.uturn.forward")
+                            .font(.system(size: 25))
+                    }
+                    .disabled(!canRedo)
+                }
             }
-            .alert("This will create a new board item with the current drawing", isPresented: $isalertShown) {
+            .alert("This will create a new board item with the current drawing", isPresented: $isAlertShown) {
                 Button(role: .cancel, action: { }, label: { Text("Cancel") })
                 Button(action: create, label: { Text("Yes!") })
+            }
+            .onReceive(undoObserver) { _ in // observer for undo (observer pattern)
+                self.canUndo = self.undoManager!.canUndo
+                print("self canUndo is \(self.canUndo)")
+                self.canRedo = self.undoManager!.canRedo
             }
         }
     }
@@ -116,7 +149,7 @@ extension PKCanvasView {
     
     // convert SwiftUIView to UIImage
     func snapshot() -> UIImage {
-                
+        
         let renderer = UIGraphicsImageRenderer(size: bounds.size)
         
         return renderer.image { _ in
