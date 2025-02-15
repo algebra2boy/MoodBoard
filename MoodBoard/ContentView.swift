@@ -9,9 +9,6 @@ import SwiftUI
 
 struct ContentView: View {
     
-    // a way to persist small and simple data in the disk
-    @AppStorage("sidebarCustomizations") var tabViewCustomization: TabViewCustomization
-    
     @State private var selectedTab: AppTabs = .board
     
     var body: some View {
@@ -25,10 +22,7 @@ struct ContentView: View {
             Tab(AppTabs.settings.name, systemImage: AppTabs.settings.systemImage, value: .settings) {
                 Text("settings")
             }
-            .customizationID(AppTabs.settings.customizationID)
         }
-        .tabViewStyle(.sidebarAdaptable)
-        .tabViewCustomization($tabViewCustomization)
         
     }
 }
