@@ -68,7 +68,7 @@ struct BoardMainLayoutView: View {
         }
         .contextMenu {
             Button(role: .destructive) {
-                if currentBoard == item { // deselect currentBoard if we delete 
+                if currentBoard == item { // deselect currentBoard if we delete
                     currentBoard = nil
                 }
                 
@@ -101,10 +101,33 @@ struct BoardMainLayoutView: View {
         }
     }
     
+    @ViewBuilder
     func imageView(imageName: String) -> some View {
-        Image(imageName)
-            .resizable()
-            .scaledToFit()
+        GeometryReader { geoReader in
+            if let uiImage = loadImageFromBundle(named: imageName) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: geoReader.size.width, height: geoReader.size.height) // dynamically adjust dimension instead of hardcoding using the width and height from the parent board item dimension
+                    .clipped() // avoid the image extend beyond the board item's bounds
+            } else {
+                Image(systemName: "exclamationmark.triangle")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: geoReader.size.width, height: geoReader.size.height)
+                    .clipped()
+            }
+        }
+    }
+    
+    func loadImageFromBundle(named name: String) -> UIImage? {
+        let fileExtensions = ["png", "jpg", "jpeg"]
+        for fileExtension in fileExtensions {
+            if let path = Bundle.main.path(forResource: name, ofType: fileExtension) {
+                return UIImage(contentsOfFile: path)
+            }
+        }
+        return nil
     }
     
     var toolbarButtons: some ToolbarContent {
