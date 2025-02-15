@@ -96,6 +96,13 @@ struct CanvasView: UIViewRepresentable {
             toolPicker.setVisible(false, forFirstResponder: canvasView)
             toolPicker.removeObserver(canvasView)
         }
+        
+        // after we export the canvas image on the alert, we need to switch from alert to the canvas again to regain the first responder event
+        if !uiView.isFirstResponder {
+            DispatchQueue.main.async { // important to run ui update on the main thread
+                uiView.becomeFirstResponder()
+            }
+        }
     }
     
 }
