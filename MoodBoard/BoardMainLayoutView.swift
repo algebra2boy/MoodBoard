@@ -68,7 +68,11 @@ struct BoardMainLayoutView: View {
         }
         .contextMenu {
             Button(role: .destructive) {
-//                boardViewModel.delete(item)
+                if currentBoard == item { // deselect currentBoard if we delete 
+                    currentBoard = nil
+                }
+                
+                boardViewModel.delete(item)
             } label: {
                 Label("Delete", systemImage: "trash")
             }
